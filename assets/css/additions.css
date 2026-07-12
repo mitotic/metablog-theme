@@ -36,6 +36,12 @@
   max-width: 65ch;
 }
 
+/* Share icons (socialshare.html) */
+.social-share .share-x { fill: #111827; }
+.dark .social-share .share-x { fill: #f9fafb; }
+.social-share .share-gray, .social-share svg.share-gray { stroke: #6b7280; }
+.dark .social-share .share-gray, .dark .social-share svg.share-gray { stroke: #9ca3af; }
+
 /* Bluesky comments (bluesky-comments.html + bsky-comments.js) */
 .bsky-comments {
   max-width: 65ch;
