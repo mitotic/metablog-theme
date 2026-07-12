@@ -1,0 +1,14 @@
+---
+title:
+- type: main
+  text: "TITLE"
+- type: subtitle
+  text: eBook
+creator:
+- role: author
+  text: "AUTHOR"
+date: DATE
+rights:  Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+language: en-US
+...
+

@@ -1,0 +1,8 @@
+.social-share span {
+  float: right;
+  position: relative;
+  top: 5px; }
+
+.social-share a {
+  width: 50px;
+  float: right; }

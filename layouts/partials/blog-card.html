@@ -1,0 +1,69 @@
+<div class="p-2 mb-8">
+<a href="{{ .RelPermalink }}">
+
+  {{- $image := false -}}
+  {{- if .IsPage -}}
+  {{- if .Params.thumbnail -}}
+  {{-     $image = .Params.thumbnail | relURL -}}
+  {{- else -}}
+  {{-     $images := .Resources.ByType "image" -}}
+  {{-     $featured := $images.GetMatch "*/*feature*" -}}
+  {{-     with $featured -}}
+  {{-         $image = $featured.RelPermalink -}}
+  {{-     else -}}
+  {{-         $thumbnail := $images.GetMatch "*thumbnail*" -}}
+  {{-         with $thumbnail -}}
+  {{-             $image = $thumbnail.RelPermalink -}}
+  {{-             else -}}
+  {{-             $image = .Site.Params.BlankImage | relURL -}}
+  {{-         end -}}
+  {{-     end -}}
+  {{- end -}}
+  {{- end -}}
+
+  {{ if .IsPage }}
+  <div class="relative">
+    {{ if $image }}
+    <img src="{{$image}}" alt="{{ .Params.title }}" class="rounded-lg shadow-sm w-full h-52 object-cover" />
+    {{ end }}
+
+    {{ if and .Site.Params.annotatePostNumber (eq (.Scratch.Get "blogCardContext") "list") }}
+      {{- $allposts := where .Site.RegularPages.ByDate "Type" $.Site.Params.blogDir -}}
+      {{- $postdate := .Date.Format "20060102" -}}
+      {{- $postnumber := 0 -}}
+      {{ if and (not .Params.draft) (not .Params.unlisted) }}
+        {{- $postcount := 0 -}}
+        {{ range $allposts }}
+          {{ if and (not .Params.draft) (not .Params.unlisted) }}
+            {{- $postcount = add $postcount 1 -}}
+            {{ if eq $postdate (.Date.Format "20060102") }}
+              {{- $postnumber = $postcount -}}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+
+    <div class="absolute top-4 left-4 rounded shadow bg-white bg-opacity-90 dark:bg-opacity-80 text-gray-900 dark:bg-gray-900 dark:text-white text-sm px-2 py-0.5">
+      #{{ $postnumber }}
+    </div>
+    {{ end }}
+
+    <div class="absolute top-4 right-4 rounded shadow bg-white bg-opacity-90 dark:bg-opacity-80 text-gray-900 dark:bg-gray-900 dark:text-white text-sm px-2 py-0.5">
+      {{ partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "short") }}
+    </div>
+  </div>
+  {{ end }}
+  <div class="my-2 text-xl font-semibold">{{ .Params.title }}</div>
+  <div class="">{{ .Params.description }}</div>
+</a>
+
+  {{ if .IsTranslated -}}
+    <div class="" style="font-style: italic;font-size: smaller;">
+      {{- $sortedTranslations := sort .Translations "Site.Language.Weight" -}}
+      {{- $links := apply $sortedTranslations "partial" "translation_link.html" "." -}}
+      {{- $cleanLinks := apply $links "chomp" "." -}}
+      {{- $linksOutput := delimit $cleanLinks (i18n "translationsSeparator") -}}
+      {{ i18n "translationsLabel" }}{{ $linksOutput }}
+    </div>
+  {{- end }}
+</div>

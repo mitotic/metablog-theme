@@ -1,0 +1,52 @@
+{{- /* GitHub-Discussions-based comments via giscus.app. DORMANT since
+     July 2026: new posts use Bluesky comments (bluesky-comments.html).
+     Activates only when params.giscus.repo is set in config.toml AND
+     the page opts in with "GiscusComments: true" in front matter. */ -}}
+{{- $g := .Site.Params.giscus -}}
+{{ if and $g $g.repo .Params.giscuscomments }}
+<div class="container px-6 py-1 mx-auto max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="text-2xl mb-2">Comments (needs GitHub login):</div>
+</div>
+
+<div class="giscus-container prose lg:prose-lg mx-auto my-8 dark:prose-dark px-4">
+  <div class="giscus"></div>
+</div>
+<script>
+  (function () {
+    function giscusTheme() {
+      return localStorage.getItem('darkmode') === 'dark' ? 'dark' : 'light';
+    }
+    var attrs = {
+      'src': 'https://giscus.app/client.js',
+      'data-repo': {{ $g.repo }},
+      'data-repo-id': {{ $g.repoId }},
+      'data-category': {{ $g.category | default "Announcements" }},
+      'data-category-id': {{ $g.categoryId }},
+      'data-mapping': 'pathname',
+      'data-strict': '0',
+      'data-reactions-enabled': '1',
+      'data-emit-metadata': '0',
+      'data-input-position': 'top',
+      'data-lang': 'en',
+      'data-loading': 'lazy',
+      'data-theme': giscusTheme(),
+      'crossorigin': 'anonymous'
+    };
+    var s = document.createElement('script');
+    for (var k in attrs) { s.setAttribute(k, attrs[k]); }
+    s.async = true;
+    document.querySelector('.giscus-container').appendChild(s);
+
+    // keep the giscus iframe in sync with the header dark-mode toggle,
+    // which flips the "dark" class on <html>
+    new MutationObserver(function () {
+      var frame = document.querySelector('iframe.giscus-frame');
+      if (frame) {
+        frame.contentWindow.postMessage(
+          { giscus: { setConfig: { theme: giscusTheme() } } },
+          'https://giscus.app');
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  })();
+</script>
+{{ end }}

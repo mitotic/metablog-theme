@@ -1,0 +1,111 @@
+baseurl = "https://example.com/"
+locale = "en-us"
+defaultContentLanguage = "en-us"
+metaDataFormat = "yaml"
+
+title = "My Blog"
+
+# googleAnalytics = "G-XXXXXXXXXX"
+
+[params]
+  # Enable the darkmode toggle in header
+  darkModeToggle = true
+
+  # Enable search in header (client-side, Fuse.js)
+  enableSearch = true
+
+  # Google custom search (optional; leave unset to disable)
+  # googleSearch = "..."
+
+  # Show per-post ePUB/PDF download chips (requires generating ebooks
+  # with blog2book.py into static/ebook/)
+  epub = false
+  pdf = false
+
+  # Post numbering
+  prefixPostNumber = false
+  annotatePostNumber = false
+
+  website = "example.com"
+  creator = "Your Name"
+
+  copyright = "Copyright © 2026 - Your Name"
+  favicon = "/favicon.ico"
+
+  logo = "/blog-logo.png"
+
+  introTitle = "My Blog"
+  introSubtitle = "A blog built with the metablog theme (customized Blist)"
+
+  # No. of posts to display on intro page
+  introPosts = 3
+
+  # No. of posts to display in lists page
+  listPosts = 6
+
+  # "Coming soon" teaser on the home page (see partials/future.html)
+  futureMessage = ""
+
+  # For Twitter/OpenGraph cards
+  description = "A blog built with the metablog theme"
+  blankImage = "/default-image.png"
+  blogImage = "/blog-card.png"
+  blogLogo = "/blog-logo.png"
+  blogBanner = "/blog-widebanner.png"
+
+  # Directory (type) containing blog posts
+  blogDir = "posts"
+
+  # Social handles (optional)
+  # blueskyHandle = "example.bsky.social"
+  # twitterHandle = "example"
+  # substackPub = "example"
+
+# giscus comments (GitHub Discussions; https://giscus.app) — dormant
+# fallback, activated per-post with "GiscusComments: true". Bluesky
+# comments need no config: set "Bskypost: <bsky.app post URL>" in a
+# post's front matter.
+[params.giscus]
+  repo = ""
+  repoId = ""
+  category = "Announcements"
+  categoryId = ""
+
+[params.author]
+  name = "Your Name"
+  email = "you@example.com"
+
+[params.homepage.social]
+  title = ""
+  description = ""
+  # bluesky = "https://bsky.app/profile/example.bsky.social"
+  rss = "index.xml"
+
+[[menu.main]]
+  name = "Posts"
+  url = "/posts"
+  weight = 1
+
+[[menu.main]]
+  name = "Tags"
+  url = "/tags"
+  weight = 2
+
+[[menu.main]]
+  name = "About"
+  url = "/page/about"
+  weight = 3
+
+[build]
+  writeStats = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+# syntax highlight settings
+[markup]
+  [markup.highlight]
+    style = "dracula"
+  [markup.goldmark.renderer]
+    # Enable to include inline HTML
+    unsafe = true

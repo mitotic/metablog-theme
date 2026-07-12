@@ -1,0 +1,21 @@
+{{- /* Bluesky-based comments: renders the replies to the post's
+     Bluesky announcement as the comment thread. Activates when the
+     page has "Bskypost: <bsky.app post URL>" in front matter, e.g.
+       Bskypost: https://bsky.app/profile/sarava.net/post/3k...
+     Replies are fetched client-side from the public Bluesky AppView
+     (no auth). Readers reply on Bluesky itself; moderation happens
+     through the author's Bluesky account (threadgates, hiding). */ -}}
+{{ with .Params.bskypost }}
+<div id="comments" class="container px-6 py-1 mx-auto max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="text-2xl mb-2">Comments via Bluesky:</div>
+</div>
+
+<div class="bsky-comments prose lg:prose-lg mx-auto my-8 dark:prose-dark px-4"
+     data-bsky-url="{{ . }}">
+  <p class="bsky-comments-loading">Loading comments from Bluesky&hellip;</p>
+  <noscript><a href="{{ . }}">View the comment thread on Bluesky</a></noscript>
+</div>
+
+{{ $bskyjs := resources.Get "js/bsky-comments.js" | resources.Minify | fingerprint }}
+<script defer src="{{ $bskyjs.RelPermalink }}" integrity="{{ $bskyjs.Data.Integrity }}"></script>
+{{ end }}

@@ -1,0 +1,102 @@
+<!-- https://www.remysheppard.com/blog/hugo-share-buttons/ -->
+
+&nbsp;
+<div class="social-share" class="padding-right:20px">
+  <span class="px-4" style="float: left;">&nbsp;</span>
+  {{ if .PrevInSection }}
+    {{ if and (eq .PrevInSection.Type "posts") (and (not .PrevInSection.Params.draft) (not .PrevInSection.Params.unlisted)) }}
+      <span style="float: left; font-size: 1.4rem; line-height: 1.1rem; color: #008aee;">
+      <a class="link-reverse" href="{{ .PrevInSection.Permalink | relURL }}?ref=header">&nbsp;«&nbsp;</a>
+      </span>
+    {{ end }}
+  {{ end }}
+  {{ if .NextInSection }}
+    {{ if and (eq .NextInSection.Type "posts") (and (not .NextInSection.Params.draft) (not .NextInSection.Params.unlisted)) }}
+      <span style="float: left; font-size: 1.4rem; line-height: 1.1rem; color: #008aee;"> 
+      <a class="link-reverse" href="{{ .NextInSection.Permalink | relURL }}?ref=header">&nbsp;»&nbsp;</a>
+      </span>
+    {{ end }}
+  {{ end }}
+
+  <span>&nbsp; &nbsp; &nbsp;</span>
+  
+  <a href="https://www.facebook.com/sharer.php?u={{ .Permalink }}" target="_blank"
+  class="inline-block hover:border-gray-800 cursor-pointer transition-colors dark:text-gray-600
+  dark:hover:border-gray-300 dark:hover:text-gray-300"
+  >
+<svg xmlns="http://www.w3.org/2000/svg"
+xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="30" height="30" viewBox="0 50 470.513 420.513" >
+<g transform="translate(0,110) scale(0.8)">
+	<path d="M271.521,154.17v-40.541c0-6.086,0.28-10.8,0.849-14.13c0.567-3.335,1.857-6.615,3.859-9.853   c1.999-3.236,5.236-5.47,9.706-6.708c4.476-1.24,10.424-1.858,17.85-1.858h40.539V0h-64.809c-37.5,0-64.433,8.897-80.803,26.691   c-16.368,17.798-24.551,44.014-24.551,78.658v48.82h-48.542v81.086h48.539v235.256h97.362V235.256h64.805l8.566-81.086H271.521z" fill="#4267B2"/>
+</g>
+</svg>
+</a>
+
+
+<a href="mailto:?subject={{ .Title }}&body=Check out this article on {{$.Title}}: {{ .Permalink }}" target="_blank"
+class="inline-block hover:border-gray-800 cursor-pointer transition-colors dark:text-gray-600 dark:hover:border-gray-300
+dark:hover:text-gray-300"
+>
+<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 114 114" >
+<g transform="translate(0,12) scale(1.05)">
+<path stroke="#4267B2" stroke-width="7" fill="none" d="m7,20h98v72H7zl44,44q5,4 10,0l44-44M7,92l36-36m26,0 36,36"/>
+</g>
+</svg>
+</a>
+
+          <a href="https://www.linkedin.com/shareArticle?url={{ .Permalink }}&title={{ .Title }}" target="_blank"
+         class="inline-block hover:border-gray-800 cursor-pointer transition-colors dark:text-gray-600
+dark:hover:border-gray-300 dark:hover:text-gray-300"
+>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="#2867B2"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+<g transform="translate(0,1) scale(1.1)">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <rect x="4" y="4" width="16" height="16" rx="2" />
+            <line x1="8" y1="11" x2="8" y2="16" />
+            <line x1="8" y1="8" x2="8" y2="8.01" />
+            <line x1="12" y1="16" x2="12" y2="11" />
+            <path d="M16 16v-3a2 2 0 0 0 -4 0" />
+</g>
+          </svg>
+        </a>
+
+
+  <a href="https://twitter.com/{{ if .Params.tweetid }}intent/retweet?tweet_id={{- .Params.tweetid -}}{{ else }}share?url={{ .Permalink }}&text={{ .Title }}&via={{ $.Site.Params.TwitterHandle }}{{ end }}"
+  target="_blank"
+  class="inline-block hover:border-gray-800 cursor-pointer transition-colors dark:text-gray-600
+  dark:hover:border-gray-300 dark:hover:text-gray-300"
+  >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            stroke-width="1.0"
+            stroke="currentColor"
+            fill="#00acee"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+          <g transform="translate(0,3) scale(0.95)">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path
+              d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z"
+            />
+          </g>
+          </svg>
+  </a>
+
+       <!-- <span>Share: &nbsp; &nbsp;</span> -->
+
+</div>
+<br>

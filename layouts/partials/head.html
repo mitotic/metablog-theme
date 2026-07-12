@@ -1,0 +1,120 @@
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="icon" href="{{ if (isset .Site.Params "favicon") }}{{ .Site.Params.favicon }}{{ else }}/favicon.ico{{ end }}">
+
+{{ range .AlternativeOutputFormats -}}
+    {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
+{{ end }}
+
+  <title>
+    {{ block "title" . }} {{- .Title }} - {{ .Site.Title -}} {{ end }}
+  </title>
+  <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{if .IsPage}}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end -}}" />
+  {{- if .Keywords }}
+  <meta name="keywords" content="{{ delimit .Keywords "," }}" />
+  {{ end -}}
+  {{- if .Params.Author }}
+  <meta name="author" content="{{ .Params.Author}}" />
+  {{ end -}}
+  
+  {{ hugo.Generator }}
+
+<style>
+  ul.mobile-menu { z-index: 99999; }
+</style>
+
+  {{/* All CSS is pre-compiled and vendored (Tailwind from the last PostCSS
+       build, socialshare from the last SCSS build) so the site builds with
+       any plain Hugo binary — no npm, no extended edition, no transpilers.
+       Site-specific additions go in css/additions.css. */}}
+  {{- $styles := slice (resources.Get "css/socialshare.css") (resources.Get "css/styles-compiled.css") (resources.Get "css/additions.css") | resources.Concat "css/styles.css" | fingerprint -}}
+  <link
+    rel="stylesheet"
+    href="{{ $styles.RelPermalink }}"
+    integrity="{{ $styles.Data.Integrity }}"
+  />
+
+  <!-- Katex support -->
+  {{ if .Params.math }}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.css"
+      integrity="sha384-D+9gmBxUQogRLqvARvNLmA9hS2x//eK1FhVb9PiU86gmcrBrJAQT8okdJ4LMp2uv"
+      crossorigin="anonymous"
+    >
+
+    <script defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/katex.min.js"
+      integrity="sha384-483A6DwYfKeDa0Q52fJmxFXkcPCFfnXMoXblOkJ4JcA8zATN6Tm78UNL72AKk+0O"
+      crossorigin="anonymous"
+    ></script>
+
+    <script defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.10.0-rc.1/dist/contrib/auto-render.min.js"
+      integrity="sha384-yACMu8JWxKzSp/C1YV86pzGiQ/l1YUfE8oPuahJQxzehAjEt2GiQuy/BIvl9KyeF"
+      crossorigin="anonymous"
+      onload="renderMathInElement(document.body);"
+    ></script>
+  {{ end }}
+
+<!--
+  {{ template "_internal/opengraph.html" . }}
+  {{ template "_internal/twitter_cards.html" . }}
+-->
+<!--
+https://onebite.dev/how-to-make-dynamic-twitter-card-for-hugo/
+https://www.kelvinpapp.com/a-dive-into-social-sharing-and-hugo/
+-->
+
+{{- $card := "summary" -}}
+{{- $image := false -}}
+{{- if .IsHome -}}
+{{-     $card = "summary_large_image" -}}
+{{-     $image = (or .Site.Params.introWide .Site.Params.BlogImage) | relURL -}}
+{{- else if .Params.card -}}
+{{-     $card = "summary_large_image" -}}
+{{-     $image = .Params.card | relURL -}}
+{{- else if .Params.thumbnail -}}
+{{-     $card = "summary_large_image" -}}
+{{-     $image = .Params.thumbnail | relURL -}}
+{{- else -}}
+{{-     $images := .Resources.ByType "image" -}}
+{{-     $featured := $images.GetMatch "*/*feature*" -}}
+{{-     with $featured -}}
+{{-         $card = "summary_large_image" -}}
+{{-         $image = $featured.RelPermalink -}}
+{{-     else -}}
+{{-         $thumbnail := $images.GetMatch "*thumbnail*" -}}
+{{-         with $thumbnail -}}
+{{-             $card = "summary_large_image" -}}
+{{-             $image = $thumbnail.RelPermalink -}}
+{{-             else -}}
+{{-             $image = .Site.Params.BlogImage | relURL -}}
+{{-         end -}}
+{{-     end -}}
+{{- end -}}
+
+
+<meta name="twitter:card" content="{{$card}}" />
+<meta name="twitter:image" content="{{(or $image .Site.Params.BlogImage) | absURL}}" />
+<meta property="og:image" content="{{(or $image .Site.Params.BlogImage) | absURL}}" />
+
+<meta name="twitter:site" content="{{.Site.Params.website}}" />
+<meta name="twitter:creator" content="{{.Site.Params.creator}}" />
+
+<meta name="twitter:title" content="{{ if .Params.Title }}{{ .Params.Title }}{{ else }}{{ $.Title }}{{ end }}" />
+<meta property="og:title" content="{{ if .Params.Title }}{{ .Params.Title }}{{ else }}{{ $.Title }}{{ end }}" />
+<meta property="og:url" content="{{ .RelPermalink }}" />
+
+{{ if .IsHome }}
+<meta name="twitter:description" content="{{ .Site.Params.Description }}" />
+<meta property="og:description" content="{{ .Site.Params.Description }}" />
+{{ else }}
+<meta name="twitter:description" content="{{- if .Description }} {{ .Description }} {{ else }} {{ .Site.Params.Description }} - {{ .Title }} {{ end -}}" />
+<meta property="og:description" content="{{- if .Description }} {{ .Description }} {{ else }} {{ .Site.Params.Description }} - {{ .Title }} {{ end -}}" />
+{{ end }}
+
+  {{ template "_internal/schema.html" . }}
+</head>

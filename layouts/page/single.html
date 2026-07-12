@@ -1,0 +1,23 @@
+{{ define "main" }}
+  {{ $lastmodstr := (partial "date.html" (dict "date" .Lastmod "language" $.Page.Language "format" "long")) }}
+  {{ $datestr := (partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "long")) }}
+
+  <article class="prose lg:prose-lg mx-auto my-8 dark:prose-dark px-4">
+
+  {{ if .Params.thumbnail }}
+  <div class="relative max-w-5xl mx-auto px-4">
+    <img src="{{ .Params.thumbnail }}" class="rounded-lg shadow-sm w-full object-contain" />
+    <div class="absolute top-4 right-8 rounded shadow bg-white text-gray-900 dark:bg-gray-900 dark:text-white px-2 py-0.5">
+      {{ $datestr }}
+    </div>
+  </div>
+  {{ end }}
+
+    <h1 class="text-2xl font-bold mb-2">{{ .Title }}</h1>
+    <h5 class="text-sm flex items-center">
+    </h5>
+
+    {{ .Content }}
+  </article>
+
+{{ end }}

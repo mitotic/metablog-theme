@@ -1,0 +1,86 @@
+{{ define "main" }}
+
+  {{- partial "intro.html" . -}}
+
+  {{- $allposts := where .Site.RegularPages.ByDate.Reverse "Type" $.Site.Params.blogDir -}}
+  {{- $draftposts := where $allposts "Params.draft" "==" true  -}}
+  {{- $unlistedposts := where (where $allposts "Params.draft" "!=" true) "Params.unlisted" "==" true -}}
+  {{- $publishedposts := where (where $allposts "Params.draft" "!=" true) "Params.unlisted" "!=" true -}}
+
+  {{- $featuredposts := where (after $.Site.Params.introPosts $publishedposts) "Params.featured" "==" true  -}}
+
+  <div class="text-center mb-8">
+    <span class="px-8 py-3 rounded transition-colors text-gray-500 dark:text-gray-400">
+      Recent posts
+    </span>
+  </div>
+
+  <div class="container p-6 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
+    {{ range first $.Site.Params.introPosts $publishedposts }}
+      {{ if (not .Params.unlisted) }}
+        {{ .Scratch.Set "blogCardContext" "index" }}
+        {{- partial "blog-card.html" . -}}
+      {{ end }}
+    {{ end }}
+  </div>
+
+  {{- with $featuredposts -}}
+    <div class="text-center mb-8">
+      <span class="px-8 py-3 rounded transition-colors text-gray-500 dark:text-gray-400">
+        Featured posts
+      </span>
+    </div>
+
+    <div class="container p-6 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
+      {{ range $featuredposts}}
+        {{- partial "blog-card.html" . -}}
+      {{ end }}
+    </div>
+  {{- end -}}
+
+  {{ if gt (len $publishedposts) (add $.Site.Params.introPosts (len $featuredposts)) }}
+  <div class="text-center mb-8">
+    <a class="px-8 py-3 rounded transition-colors {{ .Site.Params.ascentColor | default "bg-pink-50" }}
+      text-gray-500 hover:text-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:text-white"
+      href="{{ (index (.Site.Menus.main) 0).URL | absLangURL }}" lang="{{ .Lang }}">
+      More posts
+    </a>
+  </div>
+  {{ end }}
+
+  {{ if $.Site.Params.futureMessage }}
+    {{- partial "future.html" . -}}
+  {{ end }}
+
+  {{ if hugo.IsServer }}
+  {{- with $unlistedposts -}}
+    <div class="text-center mb-8">
+      <span class="px-8 py-3 rounded transition-colors text-gray-500 dark:text-gray-400">
+        UNLISTED posts
+      </span>
+    </div>
+
+    <div class="container p-6 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
+      {{ range $unlistedposts}}
+          {{- partial "blog-card.html" . -}}
+      {{ end }}
+    </div>
+  {{- end -}}
+
+  {{- with $draftposts -}}
+    <div class="text-center mb-8">
+      <span class="px-8 py-3 rounded transition-colors text-gray-500 dark:text-gray-400">
+        DRAFT posts
+      </span>
+    </div>
+
+    <div class="container p-6 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
+      {{ range $draftposts}}
+          {{- partial "blog-card.html" . -}}
+      {{ end }}
+    </div>
+  {{- end -}}
+  {{ end }}
+
+  {{- partial "social.html" . -}}
+{{ end }}

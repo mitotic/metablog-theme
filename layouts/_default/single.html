@@ -1,0 +1,211 @@
+{{ define "main" }}
+  {{ $lastmodstr := (partial "date.html" (dict "date" .Lastmod "language" $.Page.Language "format" "long")) }}
+  {{ $datestr := (partial "date.html" (dict "date" .Date "language" $.Page.Language "format" "long")) }}
+
+  {{- $allposts := where .Site.RegularPages.ByDate "Type" $.Site.Params.blogDir -}}
+  {{- $postdate := .Date.Format "20060102" -}}
+  {{- $postnumber := 0 -}}
+  {{ if and (not .Params.draft) (not .Params.unlisted) }}
+    {{- $postcount := 0 -}}
+    {{ range $allposts }}
+      {{ if and (not .Params.draft) (not .Params.unlisted) }}
+        {{- $postcount = add $postcount 1 -}}
+        {{ if eq $postdate (.Date.Format "20060102") }}
+          {{- $postnumber = $postcount -}}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ partial "socialshare.html" . }}
+  
+  <article class="prose lg:prose-lg mx-auto my-8 dark:prose-dark px-4">
+
+  {{ if .Params.thumbnail }}
+  <div class="relative max-w-5xl mx-auto px-4">
+    <img src="{{ .Params.thumbnail }}" class="rounded-lg shadow-sm w-full object-contain" />
+    <div class="absolute top-4 right-8 rounded shadow bg-white bg-opacity-90 dark:bg-opacity-80 text-gray-900 dark:bg-gray-900 dark:text-white px-2 py-0.5">
+      {{ $datestr }}
+    </div>
+  </div>
+  {{ end }}
+
+    <h1 class="text-2xl font-bold mb-2">{{ if .Site.Params.prefixPostNumber }}{{ $postnumber }}  {{ end }}{{ .Title }}</h1>
+    <div class="text-xl font-light mb-4">{{ .Description }}</div>
+
+
+    {{ if .Params.draft }}
+    <h3 class="text-2xl font-bold mb-2">*DRAFT*</h3>
+    {{ else }}
+      {{ if .Params.unlisted }}
+      <h3 class="text-2xl font-bold mb-2">**UNLISTED**</h3>
+      {{ end }}
+    {{ end }}
+
+    {{ if .Params.author }}
+      {{ if (and $.Site.Params.TwitterHandle (eq .Params.author site.Params.author.name) ) }}
+      <a href="https://twitter.com/{{- $.Site.Params.TwitterHandle -}}"
+         target="_blank" style="text-decoration-color: #a0a0a0">
+        <h5 class="text-xl mb-2 text-gray-500 dark:text-gray-300">{{- .Params.author -}}</h5>
+      </a>
+      {{ else }}
+        <h5 class="text-xl mb-2 text-gray-500 dark:text-gray-300">{{- .Params.author -}}</h5>
+      {{ end }}
+    {{ end }}
+
+    <h5 class="text-sm flex items-center">
+
+    {{ if not .Site.Params.prefixPostNumber }}
+    P#{{ $postnumber }} &bull;
+    {{ end }}
+
+    {{ if .Site.Params.epub }}
+    <a href='/ebook/{{ .Date.Format "20060102" }}-{{ if eq .File.BaseFileName "index" }}{{ index (split .File.Path "/" | last 2 | first 1) 0 }}{{ else }}{{ .File.BaseFileName }}{{ end }}.epub'
+       target="_blank"
+       style="color: #555555; border-radius: 5px 5px 5px 5px; text-decoration: none; font-weight: inherit; font-size: 0.875rem; line-height: 1.25rem;"
+       class="inline-block text-sm cursor-pointer bg-gray-200 dark:bg-gray-200"
+    >
+    &nbsp;ePUB&nbsp;
+    </a>
+     &nbsp; &bull;
+{{ end }}
+
+    {{ if .Site.Params.pdf }}
+    &nbsp;
+    <a href='/ebook/{{ .Date.Format "20060102" }}-{{ if eq .File.BaseFileName "index" }}{{ index (split .File.Path "/" | last 2 | first 1) 0 }}{{ else }}{{ .File.BaseFileName }}{{ end }}.pdf'
+       target="_blank"
+       style="color: #555555; border-radius: 5px 5px 5px 5px; text-decoration: none; font-weight: inherit; font-size: 0.875rem; line-height: 1.25rem;"
+       class="inline-block text-sm cursor-pointer bg-gray-200 dark:bg-gray-200"
+    >
+    &nbsp;PDF&nbsp;
+    </a>
+     &nbsp; &bull;
+{{ end }}
+
+<!--
+      <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <rect x="4" y="5" width="16" height="16" rx="2" />
+        <line x1="16" y1="3" x2="16" y2="7" />
+        <line x1="8" y1="3" x2="8" y2="7" />
+        <line x1="4" y1="11" x2="20" y2="11" />
+        <rect x="8" y="15" width="2" height="2" />
+      </svg>
+      {{ $datestr | i18n "postedOnDate" }}
+      {{ if ne $datestr $lastmodstr }}
+        &nbsp;{{ $lastmodstr | i18n "lastModified" }}</h5><h5 class="text-sm flex items-center">
+      {{ else }}
+        &nbsp;&bull;&nbsp;
+      {{ end }}
+
+-->
+      <svg xmlns="http://www.w3.org/2000/svg" class="mr-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <circle cx="12" cy="12" r="9" />
+        <polyline points="12 7 12 12 15 15" />
+      </svg>
+      {{ i18n "readingTime"}}{{ .ReadingTime }}&nbsp;{{ i18n "readTime" }}min
+      &nbsp;&bull;
+
+<!--
+      <svg xmlns="http://www.w3.org/2000/svg" class="mx-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+        <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+        <line x1="3" y1="6" x2="3" y2="19" />
+        <line x1="12" y1="6" x2="12" y2="19" />
+        <line x1="21" y1="6" x2="21" y2="19" />
+      </svg>
+      {{ .WordCount }}&nbsp;{{ i18n "words" }}w &bull;
+      {{ if .IsTranslated -}}
+        {{- $sortedTranslations := sort .Translations "Site.Language.Weight" -}}
+        {{- $links := apply $sortedTranslations "partial" "translation_link.html" "." -}}
+        {{- $cleanLinks := apply $links "chomp" "." -}}
+        {{- $linksOutput := delimit $cleanLinks (i18n "translationsSeparator") -}}
+        &nbsp;&bull;&nbsp;{{ i18n "translationsLabel" }}&nbsp;{{ $linksOutput }}
+      {{- end }}
+-->
+
+      <svg xmlns="http://www.w3.org/2000/svg" class="mx-1" width="16" height="16" stroke-width="2.5" stroke="currentColor" viewBox="0 0 50 50"><path d="M15 42h-2l1.2-1.6c.8-1.1 1.3-2.5 1.6-4.2C10.8 33.9
+8 29.6 8 24c0-8.6 6.5-14 17-14s17 5.4 17 14c0 8.8-6.4 14-17 14h-.7c-1.6 1.9-4.4 4-9.3 4zm10-30c-9.4 0-15 4.5-15 12 0 6.4
+3.9 9.4 7.2 10.7l.7.3-.1.8c-.2 1.6-.5 3-1.1 4.2 3.3-.4 5.2-2.1 6.3-3.5l.3-.4H25c13.5 0 15-8.4 15-12C40 16.5 34.4 12 25
+12z"/></svg>
+
+      <a href="#comments"
+       style="color: #555555; border-radius: 5px 5px 5px 5px; text-decoration: none; font-weight: inherit; font-size: 0.875rem; line-height: 1.25rem;"
+       class="inline-block text-sm cursor-pointer bg-gray-200 dark:bg-gray-200"
+      >
+      {{- $archived := index hugo.Data.archived_comments .RelPermalink -}}
+      <span id="comments-chip-label">&nbsp;{{ with $archived }}{{ len . }}&nbsp;{{ end }}comments&nbsp;</span>
+      </a>
+
+    </h5>
+
+    {{ .Content }}
+  </article>
+
+<hr>
+
+  {{ if .PrevInSection }}
+  {{ if and (eq .PrevInSection.Type "posts") (and (not .PrevInSection.Params.draft) (not .PrevInSection.Params.unlisted)) }}
+  <div class="mt-2 mb-4 ml-6 mr-6">
+    <a class="link-reverse" href="{{ .PrevInSection.Permalink | relURL }}?ref=footer">
+    <span class="px-8 py-3 rounded transition-colors text-gray-500 dark:text-gray-400">« Prev:
+    <span class="text-gray-800 dark:text-gray-200">
+	 {{ .PrevInSection.Title | truncate 60 "..."}}
+    </span>
+    </span>
+    </a>
+  </div>
+  {{ end }}
+  {{ end }}
+
+  {{ if .NextInSection }}
+  {{ if and (eq .NextInSection.Type "posts") (and (not .NextInSection.Params.draft) (not .NextInSection.Params.unlisted)) }}
+  <div class="mt-2 mb-4 ml-6 mr-6">
+    <a class="link-reverse" href="{{ .NextInSection.Permalink | relURL }}?ref=footer">
+    <span class="px-8 py-3 rounded transition-colors text-gray-500 dark:text-gray-400">» Next:
+    <span class="text-gray-800 dark:text-gray-200">
+	 {{ .NextInSection.Title | truncate 60 "..."}}
+    </span>
+    </span>
+    </a>
+  </div>
+  {{ end }}
+  {{ end }}
+
+  {{- partial "social.html" . -}}
+
+
+{{ if .Params.tweetid }}
+  &nbsp; 
+  <div class="container px-6 py-1 mx-auto max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="text-2xl mb-2" style="color: #1DA1F2">Short comments via Twitter (click on tweet shown below to reply):</div>
+  </div>
+  <blockquote id="tweet-container" class="twitter-tweet"></blockquote>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <script>
+  window.onload = function () {
+  const isDark = localStorage.getItem('darkmode');
+  twttr.widgets.createTweet(
+    '{{- .Params.tweetid -}}', 
+    document.getElementById('tweet-container'),
+    {
+      align: 'center',
+      dnt: 'true',
+      cards: 'hidden',
+      theme: (isDark && isDark === 'dark') ? 'dark' : ''
+    }
+  );
+  };
+  </script>
+  &nbsp; 
+  {{ end }}
+
+  <div id="comments">
+  {{- partial "archived-comments.html" . -}}
+  {{- partial "bluesky-comments.html" . -}}
+  {{- partial "giscus.html" . -}}
+  </div>
+
+{{ end }}

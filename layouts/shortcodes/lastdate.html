@@ -1,0 +1,4 @@
+{{- /* Date stamp (YYYYMMDD) of the newest post included in the ebooks.
+     Read from lastdate.txt (updated by blog2book.py); falls back to the
+     HUGO_LASTDATE env var used by the old deploy.sh. */ -}}
+{{- with getenv "HUGO_LASTDATE" }}{{ . }}{{ else }}{{ readFile "lastdate.txt" | strings.TrimSpace }}{{ end -}}
