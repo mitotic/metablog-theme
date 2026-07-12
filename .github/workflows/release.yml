@@ -1,0 +1,30 @@
+# Turns incoming v* tags (pushed by the metablog mirror workflow)
+# into GitHub Releases so watchers are notified of theme updates.
+name: Release on tag
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch tag annotation
+        run: git fetch --force --tags origin
+
+      - name: Create GitHub release from tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NOTES="$(git tag -l --format='%(contents)' "$GITHUB_REF_NAME")"
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --notes "${NOTES:-Theme release $GITHUB_REF_NAME}" \
+            --verify-tag \
+            || echo "Release already exists; skipping."
