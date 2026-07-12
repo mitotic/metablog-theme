@@ -36,9 +36,50 @@
   max-width: 65ch;
 }
 
-/* Share icons (socialshare.html) */
-.social-share .share-x { fill: #111827; }
-.dark .social-share .share-x { fill: #f9fafb; }
+/* Follow-link chips at the bottom of the home page (social.html) */
+.social-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none;
+  margin: 0.5rem 0;
+  padding: 0;
+}
+.social-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.85rem;
+  margin: 0.25rem 0.4rem 0.25rem 0;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.6);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.social-chip:hover {
+  border-color: #374151;
+  color: #111827;
+}
+.social-chip svg {
+  flex-shrink: 0;
+}
+.dark .social-chip {
+  border-color: #4b5563;
+  color: #9ca3af;
+  background: transparent;
+}
+.dark .social-chip:hover {
+  border-color: #d1d5db;
+  color: #f3f4f6;
+}
+
+/* Share icons (socialshare.html) and chip icons (social.html) */
+.social-share .share-x, .social-chip .share-x { fill: #111827; }
+.dark .social-share .share-x, .dark .social-chip .share-x { fill: #f9fafb; }
 .social-share .share-gray, .social-share svg.share-gray { stroke: #6b7280; }
 .dark .social-share .share-gray, .dark .social-share svg.share-gray { stroke: #9ca3af; }
 
